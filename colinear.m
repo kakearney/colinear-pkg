@@ -3,11 +3,14 @@ function [ind, p] = colinear(x, y, varargin)
 %
 % [ind, p] = colinear(x, y, p1, v1, ...)
 %
+% In a set of scattered points, this function picks out those that fall
+% along a line.
+%
 % Input variables:
 %
-%   x:  x coordinates, any size array
+%   x:      x coordinates, any size array
 %
-%   y:  y coordinates, same size as x
+%   y:      y coordinates, same size as x
 %
 % Optional input arguments:
 %
