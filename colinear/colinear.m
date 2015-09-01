@@ -17,7 +17,7 @@ function [ind, p] = colinear(x, y, varargin)
 %   npt:    minimum number of points in a colinear set [4]
 %
 %   round:  rounding tolerance for angle between points to be considered
-%           the same (degrees) [0.001]
+%           the same (degrees) [1e-5]
 %
 %   thlim:  function to limit the angles considered for a set; takes as
 %           input an array of theta values (in degrees) and return a
@@ -47,11 +47,10 @@ nx = numel(x);
 x = x(:);
 y = y(:);
 
+ind = cell(0);
+% lnadj = zeros(nx);
 
-sets = cell(0);
-lnadj = zeros(nx);
-
-count = 0;
+% count = 0;
 for ii = 1:nx
     dx = x - x(ii);
     dy = y - y(ii);
@@ -70,25 +69,34 @@ for ii = 1:nx
     thunqidx = find(isgrp);
 
     for it = 1:length(thunqidx)
-        settmp = [thidx(ith == thunqidx(it)); ii];
-        [r,c] = meshgrid(settmp);
-        iseq = r == c;
-        idx = sub2ind([nx nx], r(~iseq), c(~iseq));
-        if lnadj(idx(1)) == 0
-            count = count + 1;
-            lnadj(idx) = count;
-            
-        end 
+        settmp = sort([thidx(ith == thunqidx(it)); ii]);
+
+        isin = cellfun(@(x) isequal(settmp, x), ind);
+        if isempty(ind) || ~any(isin) 
+            ind = [ind; {settmp}];
+        end
+        
+%         [r,c] = meshgrid(settmp);
+%         iseq = r == c;
+%         
+%         r = r(~iseq);
+%         c = c(~iseq);
+%         idx = sub2ind([nx nx], r(~iseq), c(~iseq));
+%         if ~all(lnadj(idx)) %lnadj(idx(1)) == 0
+%             count = count + 1;
+%             lnadj(idx) = count;
+%         end 
     end
 end
 
-ind = cell(count,1);
-p = zeros(count,2);
-for ii = 1:count
-    [r,c] = find(lnadj == ii);
-    ind{ii} = unique([r;c]);
+nset = length(ind);
+p = zeros(nset,2);
+
+for ii = 1:nset
     p(ii,:) = polyfit(x(ind{ii}), y(ind{ii}), 1);
 end
+
+
 
  
 
