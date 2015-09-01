@@ -2,7 +2,7 @@
 
 Given a set of scattered points, this function determines whether any 
 subsets of those points fall along a line.  It also includes options to
-deal with small deviations for linearity.
+deal with small deviations from linearity.
 
 ### Syntax
 
@@ -60,6 +60,8 @@ with a set of points randomly distributed along the lines of a
 rotated grid, with a bit of error in each point's coordinates.
 
 ```matlab
+% Define the grid
+
 xg = 1:10;
 yg = logspace(log10(1), log10(10), 10);
 
@@ -67,6 +69,8 @@ xend = [[xg; xg] [1;10]*ones(1,10)];
 yend = [[1;10]*ones(1,10) [yg;yg]];
 
 nline = size(xend,2);
+
+% Scatter points randomly along the gridlines
 
 npt = 20;
 xypt = rand(npt,2,nline);
@@ -76,6 +80,8 @@ end
 xypt = reshape(permute(xypt, [1 3 2]), [], 2);
 err = rand(size(xypt))*0.02 - 0.05;
 xypt = xypt + err;
+
+% Rotate grid and points by 60 degrees
 
 th = pi/3;
 center = [5;5];
@@ -87,6 +93,8 @@ cent = ones(2,numel(xend))*5;
 xyg = R*([xend(:) yend(:)]' - cent) + cent;
 xg = reshape(xyg(1,:), size(xend));
 yg = reshape(xyg(2,:), size(yend));
+
+% Plot
 
 figure
 plot(xg,yg,':');
