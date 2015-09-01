@@ -1,7 +1,7 @@
 ## colinear.m 
 
 Given a set of scattered points, this function determines whether any 
-subsets of those points fall along the line.  It also includes options to
+subsets of those points fall along a line.  It also includes options to
 deal with small deviations for linearity.
 
 ### Syntax
