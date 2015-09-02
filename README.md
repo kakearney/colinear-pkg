@@ -129,7 +129,7 @@ set(gca, 'xlim', [-2 11], 'ylim', [-1 12]);
 Hmm... well, that wasn't really what we wanted.  In situations like this 
 (dense, nearly-gridded sets of points), 
 the various diagonals are more colinear than the lines we
-actually want to extract, expecially since we allowed for a little wiggle
+actually want to extract, especially since we allowed for a little wiggle
 room in the definition of "colinear."  In these cases, adding a little a
 priori information about the orientation of our desired lines can help.
 We know our grid lies along the 60/150 degree orientation, so we can use
