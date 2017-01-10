@@ -1,4 +1,4 @@
-function [xc, ix] = findclump(x, tol)
+function [xc, ix] = findclump(x, tol, metric)
 %FINDCLUMP Locate values close to each other
 %
 % [xc, ix] = findclump(x, tol)
@@ -9,9 +9,14 @@ function [xc, ix] = findclump(x, tol)
 %
 % Input variables:
 %
-%   x:      array of data points
+%   x:      n x m array of data points, where each row represents one
+%           m-dimensional point
 %
-%   tol:    tolerance value
+%   tol:    tolerance distance
+%
+%   metric: distance metric to use for interpoint distance
+%           1 = city block, 2 = Euclidean (default), inf = infinity-norm, 0
+%           = minimum difference.  See ipdm help for more details.  
 %
 % Output values:
 %
@@ -22,11 +27,17 @@ function [xc, ix] = findclump(x, tol)
 
 % Copyright 2015 Kelly Kearney
 
-x = x(:);
+if isvector(x)
+    x = x(:);
+end
 
-D = ipdm(x, 'subset', 'maximum', 'limit',  tol, 'result', 'structure');
+if nargin < 3
+    metric = 2;
+end
 
-ix = nan(size(x));
+D = ipdm(x, 'subset', 'maximum', 'limit',  tol, 'result', 'structure', 'metric', metric);
+
+ix = nan(size(x,1),1);
 count = 1;
 for ii = 1:length(x)
     pot = D.columnindex(D.rowindex == ii);
@@ -44,4 +55,7 @@ end
 isn = isnan(ix);
 ix(isn) = (1:sum(isn)) + (count - 1);
 
-xc = accumarray(ix, x, [max(ix) 1], @mean);
+xc = zeros(max(ix), size(x,2));
+for ii = 1:size(x,2)
+    xc(:,ii) = accumarray(ix, x(:,ii), [max(ix) 1], @mean);
+end
