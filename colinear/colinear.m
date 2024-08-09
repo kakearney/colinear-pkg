@@ -36,11 +36,13 @@ function [ind, p] = colinear(x, y, varargin)
 % Copyright 2015 Kelly Kearney   
 
 
-Opt.npt = 4;
-Opt.round = 1e-5;
-Opt.thlim = @(x) true(size(x));
+p = inputParser;
+p.addParameter('npt', 4);
+p.addParameter('round', 1e-5);
+p.addParameter('thlim', @(x) true(size(x)));
+p.parse(varargin{:});
 
-Opt = parsepv(Opt,varargin);
+Opt = p.Results;
 
 nx = numel(x);
 
